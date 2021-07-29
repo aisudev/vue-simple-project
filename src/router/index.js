@@ -14,7 +14,7 @@ const routes = [
     component: Home,
     props: (route) => ({
       page: parseInt(route.query.page) || 1,
-      size: parseInt(route.query.size) || 2
+      size: parseInt(route.query.size) || 4
     })
   },
   {

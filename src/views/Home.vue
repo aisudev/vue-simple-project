@@ -8,6 +8,20 @@
       :trip="passenger.trips"
       @click="getDetail(passenger._id)"
     />
+    <div class="pageination">
+      <router-link
+        id="page-prev"
+        :to="{ name: 'Home', query: { page: page - 1, size: size } }"
+      >
+        <h4>prev</h4>
+      </router-link>
+      <router-link
+        id="page-next"
+        :to="{ name: 'Home', query: { page: page + 1, size: size } }"
+      >
+        <h4>next</h4>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -34,6 +48,7 @@ export default {
   data() {
     return {
       passengers: [],
+      total: 0,
     };
   },
 
@@ -47,6 +62,7 @@ export default {
         .getPassengers(this.page, this.size)
         .then((result) => {
           this.passengers = result.data.data;
+          this.total = result.headers["x-total-count"];
         })
         .catch((err) => {
           console.log(err);
@@ -59,6 +75,13 @@ export default {
       this.$router.push({ name: "Passenger", params: { id: id } });
     },
   },
+
+  computed: {
+    hasNextPage() {
+      let totalPages = Math.ceil(this.total / this.size);
+      return this.page < totalPages;
+    },
+  },
 };
 </script>
 
@@ -69,5 +92,24 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.pageination {
+  display: flex;
+  width: 290px;
+}
+
+.pageination a {
+  flex: 1;
+  text-decoration: none;
+  color: #2c3e40;
+}
+
+#page-prev {
+  text-align: left;
+}
+
+#page-next {
+  text-align: right;
 }
 </style>
